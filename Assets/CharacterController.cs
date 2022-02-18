@@ -8,6 +8,8 @@ public class CharacterController : MonoBehaviour
     [SerializeField] float moveSpeed = 6;
     [SerializeField] Animator animator;
     [SerializeField] SpriteRenderer sprite;
+    [SerializeField] GameObject bulletPrefab;
+    [SerializeField] float shotspeed = 15f;
 
     public bool shoot = false;
 
@@ -52,7 +54,44 @@ public class CharacterController : MonoBehaviour
         float moveY = y * moveSpeed;
         rb.velocity = new Vector2(moveX, moveY);
 
-        animator.SetFloat("xSpeed", System.Math.Abs(moveX));
-        animator.SetFloat("ySpeed", System.Math.Abs(moveY));
+        animator.SetFloat("speed", System.Math.Abs(moveX + moveY));
+
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            GameObject bullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
+            Rigidbody2D bulletRigidbody = bullet.GetComponent<Rigidbody2D>();
+            bulletRigidbody.velocity = new Vector2(shotspeed, 0);
+            animator.SetBool("shoot", true);
+        }
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            GameObject bullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
+            Rigidbody2D bulletRigidbody = bullet.GetComponent<Rigidbody2D>();
+            bulletRigidbody.velocity = new Vector2(-shotspeed, 0);
+            animator.SetBool("shoot", true);
+        }
+        else if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            GameObject bullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
+            Rigidbody2D bulletRigidbody = bullet.GetComponent<Rigidbody2D>();
+            bulletRigidbody.velocity = new Vector2(0, shotspeed);
+            animator.SetBool("shoot", true);
+        }
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            GameObject bullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
+            Rigidbody2D bulletRigidbody = bullet.GetComponent<Rigidbody2D>();
+            bulletRigidbody.velocity = new Vector2(0, -shotspeed);
+            animator.SetBool("shoot", true);
+        }
+        else
+        {
+            animator.SetBool("shoot", false);
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("colliding");
     }
 }
